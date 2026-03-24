@@ -1,0 +1,25 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Ambiente
+.env
+.env.*.local
+
+# Logs / cache
+npm-debug.log*
+.pnpm-debug.log*
+.cache/
+
+# SO / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Prisma (mantenha migrations versionadas; ignore apenas artefatos locais se necessário)

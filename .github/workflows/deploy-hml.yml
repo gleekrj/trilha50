@@ -1,0 +1,38 @@
+# Ambiente GitHub: HML
+
+name: Deploy HML
+
+on:
+  push:
+    branches: [hml]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: HML
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build backend
+        working-directory: backend
+        run: |
+          npm ci
+          npx prisma generate
+          npm run build
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+      - name: Publicar artefatos (exemplo)
+        uses: actions/upload-artifact@v4
+        with:
+          name: trilha50-hml-build
+          path: |
+            backend/dist
+            frontend/dist
+      - name: Próximo passo
+        run: |
+          echo "Configure deploy real neste job usando secrets do ambiente HML."
