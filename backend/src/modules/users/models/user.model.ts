@@ -1,12 +1,13 @@
-import { User as PrismaUser } from '@prisma/client';
+import type { User as PrismaUser } from '../../../generated/prisma/client';
 
 /**
  * Modelo de domínio / persistência exposto pela camada de aplicação (não confundir com DTO de entrada/saída).
+ * `passwordHash` não é mapeado de propósito para não vazar em respostas JSON.
  */
 export class UserModel {
   id: string;
   email: string;
-  name: string | null;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
 

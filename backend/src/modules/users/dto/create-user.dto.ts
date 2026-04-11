@@ -1,18 +1,32 @@
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
-  IsOptional,
+  IsNotEmpty,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { normalizeUserName } from '../utils/user-name.util';
 
 export class CreateUserDto {
+  @Transform(({ value }) => normalizeUserName(value))
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[\p{L}]+(?: [\p{L}]+)*$/u, {
+    message:
+      'O nome deve conter apenas letras e espaços simples entre palavras',
+  })
+  @MaxLength(120)
+  name: string;
+
   @IsEmail()
+  @MaxLength(254)
   email: string;
 
-  @IsOptional()
   @IsString()
-  @MinLength(1)
-  @MaxLength(120)
-  name?: string;
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(250)
+  password: string;
 }

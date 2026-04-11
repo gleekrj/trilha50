@@ -1,19 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '../../../generated/prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserModel } from '../models/user.model';
+import { CreateUserPersistence } from './create-user.persistence';
 import { IUsersRepository } from './users.repository.interface';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateUserDto): Promise<UserModel> {
+  async create(data: CreateUserPersistence): Promise<UserModel> {
     const row = await this.prisma.user.create({
       data: {
-        email: dto.email,
-        name: dto.name ?? null,
+        email: data.email,
+        name: data.name,
+        passwordHash: data.passwordHash,
       },
     });
     return UserModel.fromPrisma(row);
@@ -41,16 +43,28 @@ export class UsersRepository implements IUsersRepository {
         },
       });
       return UserModel.fromPrisma(row);
-    } catch {
-      throw new NotFoundException(`Usuário ${id} não encontrado`);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          throw new NotFoundException(`Usuário ${id} não encontrado`);
+        }
+        throw e;
+      }
+      throw e;
     }
   }
 
   async remove(id: string): Promise<void> {
     try {
       await this.prisma.user.delete({ where: { id } });
-    } catch {
-      throw new NotFoundException(`Usuário ${id} não encontrado`);
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2025'
+      ) {
+        throw new NotFoundException(`Usuário ${id} não encontrado`);
+      }
+      throw e;
     }
   }
 }

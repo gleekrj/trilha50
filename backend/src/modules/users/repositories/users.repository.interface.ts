@@ -1,9 +1,9 @@
-import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserModel } from '../models/user.model';
+import { CreateUserPersistence } from './create-user.persistence';
 
 export interface IUsersRepository {
-  create(dto: CreateUserDto): Promise<UserModel>;
+  create(data: CreateUserPersistence): Promise<UserModel>;
   findAll(): Promise<UserModel[]>;
   findById(id: string): Promise<UserModel | null>;
   update(id: string, dto: UpdateUserDto): Promise<UserModel>;
