@@ -12,4 +12,4 @@ import { UsersModule } from './modules/users/users.module';
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}
