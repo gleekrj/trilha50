@@ -1,4 +1,4 @@
-# Ambiente GitHub: HML
+# Ambiente GitHub: HML — secret DATABASE_URL necessário para aplicar migrations no deploy.
 
 name: Deploy HML
 
@@ -15,12 +15,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Build backend
+      - name: Instalar dependências e gerar Prisma Client
         working-directory: backend
         run: |
           npm ci
           npx prisma generate
-          npm run build
+      - name: Aplicar migrations no banco (Prisma)
+        working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma migrate deploy
+      - name: Compilar backend
+        working-directory: backend
+        run: npm run build
       - name: Build frontend
         working-directory: frontend
         run: |

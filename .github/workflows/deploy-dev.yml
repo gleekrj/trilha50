@@ -1,5 +1,6 @@
 # Ambiente GitHub: DEV — crie em Settings → Environments com o nome exato "DEV".
 # Ajuste os passos abaixo para seu provedor (Azure, AWS, VM, etc.).
+# Secret obrigatório no ambiente DEV: DATABASE_URL (para `prisma migrate deploy` no CI).
 
 name: Deploy DEV
 
@@ -16,12 +17,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Build backend
+      - name: Instalar dependências e gerar Prisma Client
         working-directory: backend
         run: |
           npm ci
           npx prisma generate
-          npm run build
+      - name: Aplicar migrations no banco (Prisma)
+        working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma migrate deploy
+      - name: Compilar backend
+        working-directory: backend
+        run: npm run build
       - name: Build frontend
         working-directory: frontend
         run: |
