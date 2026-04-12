@@ -3,6 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaClient } from '../generated/prisma/client';
 
+/**
+ * Cliente Prisma gerenciado pelo Nest com hooks de ciclo de vida da conexão.
+ */
 @Injectable()
 export class PrismaService
   extends PrismaClient
@@ -14,10 +17,16 @@ export class PrismaService
     super({ adapter });
   }
 
+  /**
+   * Conecta ao banco quando a aplicação Nest inicia.
+   */
   async onModuleInit(): Promise<void> {
     await this.$connect();
   }
 
+  /**
+   * Desconecta do banco quando a aplicação Nest encerra.
+   */
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
   }
