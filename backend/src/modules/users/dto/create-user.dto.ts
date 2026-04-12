@@ -9,6 +9,9 @@ import {
 } from 'class-validator';
 import { normalizeUserName } from '../utils/user-name.util';
 
+/**
+ * Corpo da requisição para criação de usuário. Validado com class-validator.
+ */
 export class CreateUserDto {
   @Transform(({ value }) => normalizeUserName(value))
   @IsString()

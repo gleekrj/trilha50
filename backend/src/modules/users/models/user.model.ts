@@ -1,23 +1,28 @@
 import type { User as PrismaUser } from '../../../generated/prisma/client';
 
 /**
- * Modelo de domínio / persistência exposto pela camada de aplicação (não confundir com DTO de entrada/saída).
- * `passwordHash` não é mapeado de propósito para não vazar em respostas JSON.
+ * Modelo de domínio retornado pela camada de aplicação (não é DTO de entrada nem de saída).
+ * O `passwordHash` é omitido de propósito para não aparecer em respostas JSON.
  */
 export class UserModel {
-  id: string;
-  email: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  constructor(
+    readonly id: string,
+    readonly email: string,
+    readonly name: string,
+    readonly createdAt: Date,
+    readonly updatedAt: Date,
+  ) {}
 
+  /**
+   * Monta um `UserModel` a partir de uma linha `User` do Prisma.
+   */
   static fromPrisma(row: PrismaUser): UserModel {
-    const m = new UserModel();
-    m.id = row.id;
-    m.email = row.email;
-    m.name = row.name;
-    m.createdAt = row.createdAt;
-    m.updatedAt = row.updatedAt;
-    return m;
+    return new UserModel(
+      row.id,
+      row.email,
+      row.name,
+      row.createdAt,
+      row.updatedAt,
+    );
   }
 }

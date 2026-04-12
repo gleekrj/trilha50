@@ -2,6 +2,9 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserModel } from '../models/user.model';
 import { CreateUserPersistence } from './create-user.persistence';
 
+/**
+ * Contrato de persistência para agregados de usuário.
+ */
 export interface IUsersRepository {
   create(data: CreateUserPersistence): Promise<UserModel>;
   findAll(): Promise<UserModel[]>;

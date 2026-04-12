@@ -9,6 +9,9 @@ import {
 } from 'class-validator';
 import { normalizeUserName } from '../utils/user-name.util';
 
+/**
+ * Corpo da requisição para atualização parcial de usuário. Validado com class-validator.
+ */
 export class UpdateUserDto {
   @IsOptional()
   @IsEmail()
