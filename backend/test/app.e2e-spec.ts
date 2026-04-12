@@ -5,7 +5,7 @@ import { Prisma } from '../src/generated/prisma/client';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/prisma/prisma.service';
 
-describe('App (e2e)', () => {
+describe('Aplicação (e2e)', () => {
   let app: INestApplication;
   let prismaMock: {
     user: {
@@ -58,9 +58,27 @@ describe('App (e2e)', () => {
     await app.close();
   });
 
-  it('/health (GET)', () => {
+  it('GET /health retorna status ok', () => {
     return request(app.getHttpServer())
       .get('/health')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toEqual({ status: 'ok' });
+      });
+  });
+
+  it('GET /admin/test — smoke (raiz)', () => {
+    return request(app.getHttpServer())
+      .get('/admin/test')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toEqual({ status: 'ok' });
+      });
+  });
+
+  it('GET /users/admin/test — smoke (módulo users)', () => {
+    return request(app.getHttpServer())
+      .get('/users/admin/test')
       .expect(200)
       .expect((res) => {
         expect(res.body).toEqual({ status: 'ok' });
@@ -90,7 +108,7 @@ describe('App (e2e)', () => {
         .expect(400);
     });
 
-    it('cria profissional e não retorna senha nem hash', async () => {
+    it('cria usuário e não retorna senha nem hash', async () => {
       const now = new Date();
       prismaMock.user.create.mockResolvedValue({
         id: '550e8400-e29b-41d4-a716-446655440000',
@@ -129,7 +147,7 @@ describe('App (e2e)', () => {
       });
     });
 
-    it('retorna 409 quando e-mail já existe', async () => {
+    it('retorna 409 quando o e-mail já existe', async () => {
       prismaMock.user.create.mockRejectedValue(
         new Prisma.PrismaClientKnownRequestError('Unique constraint', {
           code: 'P2002',

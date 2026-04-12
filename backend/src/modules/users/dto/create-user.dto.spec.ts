@@ -1,21 +1,23 @@
 import 'reflect-metadata';
 import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { validate, type ValidationError } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
-function dtoFromPlain(plain: Record<string, unknown>) {
+function dtoFromPlain(plain: Record<string, unknown>): CreateUserDto {
   return plainToInstance(CreateUserDto, plain, {
     enableImplicitConversion: true,
     exposeDefaultValues: true,
   });
 }
 
-async function validateCreateUser(plain: Record<string, unknown>) {
+async function validateCreateUser(
+  plain: Record<string, unknown>,
+): Promise<ValidationError[]> {
   const dto = dtoFromPlain(plain);
   return validate(dto, { whitelist: true, forbidNonWhitelisted: true });
 }
 
-describe('CreateUserDto (regras de cadastro profissional 50+)', () => {
+describe('CreateUserDto (validação de cadastro profissional 50+)', () => {
   const validBase = {
     name: 'Maria Silva',
     email: 'maria@exemplo.com',

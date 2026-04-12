@@ -1,16 +1,18 @@
 import 'reflect-metadata';
 import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { validate, type ValidationError } from 'class-validator';
 import { UpdateUserDto } from './update-user.dto';
 
-function dtoFromPlain(plain: Record<string, unknown>) {
+function dtoFromPlain(plain: Record<string, unknown>): UpdateUserDto {
   return plainToInstance(UpdateUserDto, plain, {
     enableImplicitConversion: true,
     exposeDefaultValues: true,
   });
 }
 
-async function validateUpdateUser(plain: Record<string, unknown>) {
+async function validateUpdateUser(
+  plain: Record<string, unknown>,
+): Promise<ValidationError[]> {
   const dto = dtoFromPlain(plain);
   return validate(dto, { whitelist: true, forbidNonWhitelisted: true });
 }

@@ -6,18 +6,18 @@ import { UserModel } from './models/user.model';
 import { IUsersRepository } from './repositories/users.repository.interface';
 import { UsersService } from './users.service';
 
-describe('UsersService (regras de negócio: hash de senha e unicidade de e-mail)', () => {
+describe('UsersService (hash de senha e unicidade de e-mail)', () => {
   let service: UsersService;
   let repository: jest.Mocked<IUsersRepository>;
 
   const sampleUser = (): UserModel => {
-    const m = new UserModel();
-    m.id = 'id-1';
-    m.email = 'a@b.co';
-    m.name = 'Nome';
-    m.createdAt = new Date('2026-01-01');
-    m.updatedAt = new Date('2026-01-01');
-    return m;
+    return new UserModel(
+      'id-1',
+      'a@b.co',
+      'Nome',
+      new Date('2026-01-01'),
+      new Date('2026-01-01'),
+    );
   };
 
   beforeEach(() => {
