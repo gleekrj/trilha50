@@ -20,3 +20,36 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+/// Conta de acesso (autenticação) para perfis distintos (empresa/profissional).
+model Account {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company      Company?
+  professional Professional?
+}
+
+/// Empresa (perfil de acesso) com dados próprios.
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  accountId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account  @relation(fields: [accountId], references: [id])
+}
+
+/// Profissional (perfil de acesso) com dados próprios (campos adicionais virão depois).
+model Professional {
+  id        String   @id @default(uuid())
+  accountId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account  @relation(fields: [accountId], references: [id])
+}
