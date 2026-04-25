@@ -17,6 +17,8 @@ jobs:
           node-version: "20"
       - name: Instalar dependências e gerar Prisma Client
         working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           npm ci
           npx prisma generate
