@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { normalizeEmail } from '../../companies/utils/email.util';
 import { normalizeUserName } from '../utils/user-name.util';
 
 /**
@@ -23,6 +24,7 @@ export class CreateUserDto {
   @MaxLength(120)
   name: string;
 
+  @Transform(({ value }) => normalizeEmail(value))
   @IsEmail()
   @MaxLength(254)
   email: string;
