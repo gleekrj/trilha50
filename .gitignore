@@ -7,8 +7,8 @@ build/
 *.tsbuildinfo
 
 # Ambiente
-.env
-.env.*.local
+.env.*
+!.env.example
 
 # Logs / cache
 npm-debug.log*
