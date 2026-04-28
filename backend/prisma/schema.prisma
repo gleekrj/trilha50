@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider  = "postgresql"
 }
 
 /// Entidade persistida (espelha a tabela; alinhar com `models` no domínio quando necessário).
