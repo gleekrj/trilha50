@@ -22,4 +22,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
+backend/src/generated/
+
 # Prisma (mantenha migrations versionadas; ignore apenas artefatos locais se necessário)
