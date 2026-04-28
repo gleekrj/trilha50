@@ -1,19 +1,55 @@
 // https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider     = "prisma-client"
+  // Dentro de `src/` para o Nest emitir `dist/src/generated/...` e os imports relativos funcionarem em runtime.
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
 }
 
 /// Entidade persistida (espelha a tabela; alinhar com `models` no domínio quando necessário).
 model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+/// Conta de acesso (autenticação) para perfis distintos (empresa/profissional).
+model Account {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company      Company?
+  professional Professional?
+}
+
+/// Empresa (perfil de acesso) com dados próprios.
+model Company {
   id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
+  name      String
+  accountId String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  account   Account  @relation(fields: [accountId], references: [id])
+}
+
+/// Profissional (perfil de acesso) com dados próprios (campos adicionais virão depois).
+model Professional {
+  id        String   @id @default(uuid())
+  accountId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account  @relation(fields: [accountId], references: [id])
 }

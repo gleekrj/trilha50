@@ -2,3 +2,5 @@ node_modules
 # Keep environment variables out of version control
 .env
 
+# Prisma 7 — client gerado em `prisma generate` (recriado no CI)
+src/generated/

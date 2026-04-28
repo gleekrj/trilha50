@@ -1,25 +1,23 @@
-import { Button } from "@/components/ui/button";
-import { useAppStore } from "@/stores/app.store";
+import { Route, Routes } from 'react-router-dom';
+import { AuthShell } from '@/components/auth/auth-shell';
+import { HomePage } from '@/pages/home-page';
+import { LoginPage } from '@/pages/login-page';
+import { RegisterCompanyPage } from '@/pages/register-company-page';
+import { RegisterProfessionalPage } from '@/pages/register-professional-page';
 
 function App() {
-  const { title, setTitle } = useAppStore();
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 p-8">
-      <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-      <p className="text-muted-foreground max-w-md text-center text-sm">
-        Frontend: React, TypeScript, Zustand e ShadCN. Backend em NestJS na
-        pasta{" "}
-        <code className="bg-muted rounded px-1 py-0.5 text-xs">backend/</code>.
-      </p>
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={() => setTitle("Trilha 50+ — pronto")}
-      >
-        Atualizar título (Zustand)
-      </Button>
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route element={<AuthShell />}>
+        <Route path="entrar" element={<LoginPage />} />
+        <Route path="cadastro/empresa" element={<RegisterCompanyPage />} />
+        <Route
+          path="cadastro/profissional"
+          element={<RegisterProfessionalPage />}
+        />
+      </Route>
+    </Routes>
   );
 }
 

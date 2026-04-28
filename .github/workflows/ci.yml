@@ -10,6 +10,10 @@ jobs:
   backend:
     name: Backend — lint e build
     runs-on: ubuntu-latest
+    env:
+      # prisma.config.ts exige DATABASE_URL ao carregar; generate não conecta ao banco.
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
+      DIRECT_URL: postgresql://ci:ci@127.0.0.1:5432/ci?schema=public
     defaults:
       run:
         working-directory: backend
